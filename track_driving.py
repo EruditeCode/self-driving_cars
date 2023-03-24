@@ -1,6 +1,6 @@
 # Program to explore an autonomous car driving round a track.
 
-# Video Walkthrough Link: ###
+# Video Walkthrough Link: https://www.youtube.com/watch?v=NbKCmxzS05k&feature=youtu.be
 
 import pygame
 from track_barriers import barriers

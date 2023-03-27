@@ -6,7 +6,7 @@ import pygame
 from track_barriers import barriers
 from basic_car import Car
 
-# Reorganise the boundry data as walls.
+# Reorganise the boundary data as walls.
 walls = []
 for barrier in barriers:
 	for i in range(len(barrier)):

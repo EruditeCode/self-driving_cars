@@ -6,7 +6,7 @@ import pygame
 from ellipse_path import path, inner, outer
 from basic_car import Car
 
-# Reorganise the boundry data as walls.
+# Reorganise the boundary data as walls.
 walls = []
 for i in range(len(inner)):
 	walls.append([inner[i-1], inner[i]])
@@ -45,7 +45,7 @@ def main():
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))
 
-		# Displaying the path and boundry walls.
+		# Displaying the path and boundary walls.
 		for step in path:
 			pygame.draw.circle(screen, (30,30,30), step, 25)
 		for i in range(0, len(outer)):

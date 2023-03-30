@@ -33,13 +33,17 @@ def main():
 	trail = deque([], 61)
 
 	drive = False
+	show_struct = False
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				exit()
 			if event.type == pygame.MOUSEBUTTONUP:
-				drive = not drive
+				if event.button == 1:
+					drive = not drive
+				if event.button == 3:
+					show_struct = not show_struct
 
 		if drive:
 			trail.appendleft(car1.pos)
@@ -57,13 +61,13 @@ def main():
 				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], i//9)
 			trail.pop()
 
+		if show_struct:
+			for ray in car1.rays:
+				pygame.draw.aaline(screen, (255,0,0), ray.pos, ray.terminus)
 
-		# for ray in car1.rays:
-		# 	pygame.draw.aaline(screen, (0,255,0), ray.pos, ray.terminus)
-
-		# for barrier in barriers:
-		# 	for i in range(0, len(barrier)):
-		# 		pygame.draw.line(screen, (255,255,255), barrier[i-1], barrier[i], 3)
+			for barrier in barriers:
+				for i in range(0, len(barrier)):
+					pygame.draw.line(screen, (255,255,255), barrier[i-1], barrier[i], 3)
 
 		# Rotating and displaying the car object.
 		car_temp = pygame.transform.rotate(CAR_IMAGE, -car1.dir)

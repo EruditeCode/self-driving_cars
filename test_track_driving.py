@@ -51,10 +51,10 @@ def main():
 		# Drawing the car trail. # Make the trail smaller over time...
 		if len(trail) < 60:
 			for i in range(0, len(trail)):
-				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], 4)
+				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], i//9)
 		else:
 			for i in range(0, len(trail)):
-				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], 4)
+				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], i//9)
 			trail.pop()
 
 

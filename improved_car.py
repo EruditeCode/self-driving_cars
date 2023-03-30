@@ -9,6 +9,7 @@ class Car:
 		self.dir = direction
 		self.speed = speed
 		self.max_angle = max_angle
+		self.decision_counter = 0
 
 		self.rays = []
 		for angle in range(-60, 70, 60):
@@ -31,23 +32,42 @@ class Car:
 			ray.update(self.pos, self.dir, walls)
 
 	def update_guidance(self):
+		# If the ray is short...
+		# Perform evasive maneurveurs otherwise allow slow, random direction...
+		# Check if the decision counter allows a guidance update.
+		if self.decision_counter == 1:
+			self.decision_counter = 0
+			return
+		else:
+			self.decision_counter += 1
+
 		# Find the longest ray.
-		max_distance, max_index = 0, None
-		for index, ray in enumerate(self.rays):
-			if ray.distance >= max_distance:
-				max_distance = ray.distance
-				max_index = index
+		max_ray = self.find_longest_ray()
+		if self.rays[max_ray] < 50:
+			# Evasive action!!!
+			pass
+		else:
+			# Decision check...
+			# More general direction update...
+			pass
 
 		# Bias the random direction change towards the longest ray.
-		if max_index == 0:
+		if max_ray == 0:
 			self.dir += randint(-self.max_angle, 0)
-		elif max_index == 1:
+		elif max_ray == 1:
 			if self.rays[0].distance > self.rays[2].distance:
 				self.dir += randint(-self.max_angle, 1)
 			else:
 				self.dir += randint(-1, self.max_angle)
 		else:
 			self.dir += randint(0, self.max_angle)
+
+	def find_longest_ray(self):
+		max_distance, max_index = 0, None
+		for index, ray in enumerate(self.rays):
+			if ray.distance >= max_distance:
+				max_distance, max_index = ray.distance, index
+		return max_index
 
 	def reset(self, position, direction):
 		self.pos = position

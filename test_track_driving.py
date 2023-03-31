@@ -26,7 +26,7 @@ def main():
 	# Loading car image and initialising the car object.
 	CAR_IMAGE = pygame.image.load('car.png')
 	CAR_IMAGE = pygame.transform.scale(CAR_IMAGE, (42, 20))
-	car1 = Car((WIDTH//2, HEIGHT//2), 90, 2, 6)
+	car1 = Car((WIDTH//2, HEIGHT//2), 0, 2, 6)
 	car1.update(walls)
 
 	# Initialising empty trail list to create a trail for the car.
@@ -47,7 +47,8 @@ def main():
 
 		if drive:
 			trail.appendleft(car1.pos)
-			car1.update(walls)
+			mouse = pygame.mouse.get_pos()
+			car1.update(walls, mouse)
 
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))
@@ -75,6 +76,9 @@ def main():
 		car_rect = car_temp.get_rect()
 		car_rect.center = car1.pos
 		screen.blit(car_temp, car_rect)
+
+		pygame.draw.circle(screen, (0,0,255), car1.left, 5)
+		pygame.draw.circle(screen, (255,0,0), car1.right, 5)
 		
 		pygame.display.update()
 		clock.tick(60)

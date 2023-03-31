@@ -33,9 +33,6 @@ def main():
 	car2 = Car((80, 80), 90, 2, 6)
 	car2.update(walls)
 
-	# Initialising empty trail list to create a trail for the car.
-	trail = deque([], 61)
-
 	drive = False
 	show_struct = False
 	while True:
@@ -50,21 +47,11 @@ def main():
 					show_struct = not show_struct
 
 		if drive:
-			trail.appendleft(car1.pos)
 			car1.update(walls)
 			car2.update(walls, car1.pos)
 
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))
-
-		# Drawing the car trail. # Make the trail smaller over time...
-		if len(trail) < 60:
-			for i in range(0, len(trail)):
-				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], i//9)
-		else:
-			for i in range(0, len(trail)):
-				pygame.draw.circle(screen, (236, 236-i, 236-3*i), trail[i], i//9)
-			trail.pop()
 
 		# Toggle for showing the rays from the car and the barriers on the map.
 		if show_struct:

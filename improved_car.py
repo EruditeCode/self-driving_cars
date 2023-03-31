@@ -10,33 +10,32 @@ class Car:
 		self.speed = speed
 		self.max_angle = max_angle
 		self.decision_counter = 0
+		self.left = (0,0)
+		self.right = (0,0)
 
 		self.rays = []
 		for angle in range(-60, 70, 60):
 			ray = Ray(self.pos, angle, 2000)
 			self.rays.append(ray)
 
-	def update(self, walls):
+	def update(self, walls, track=None):
 		self.update_position()
 		self.update_rays(walls)
-		self.update_guidance()
+		self.update_guidance(track)
 
 	def update_position(self):
-		angle = self.dir * (math.pi / 180)
-		x = self.pos[0] + (self.speed * math.cos(angle))
-		y = self.pos[1] + (self.speed * math.sin(angle))
-		self.pos = (x, y)
+		self.pos = self.get_position(self.dir, self.speed)
 
 	def update_rays(self, walls):
 		for ray in self.rays:
 			ray.update(self.pos, self.dir, walls)
 
-	def update_guidance(self):
+	def update_guidance(self, target):
 		min_ray, max_ray = self.find_min_max_rays()
 		if self.rays[min_ray].distance < 80:
 			self.evasive_action(max_ray)
 		else:
-			self.decision_counter_check()
+			self.decision_counter_check(target)
 		
 	def find_min_max_rays(self):
 		max_distance, max_index = self.rays[0].distance, 0
@@ -59,12 +58,41 @@ class Car:
 		else:
 			self.dir += randint(0, self.max_angle)
 
-	def decision_counter_check(self):
+	def decision_counter_check(self, target):
 		if self.decision_counter >= 10:
-			self.dir += randint(-self.max_angle, self.max_angle)
+			if target:
+				self.turn_towards_target(target)
+			else:
+				self.dir += randint(-self.max_angle, self.max_angle)
 			self.decision_counter = 0
 		else:
 			self.decision_counter += 1
+
+	def turn_towards_target(self, target):
+		#self.get_angle_to_target
+		A, B, C = self.pos, self.get_position(self.dir, self.speed), target
+		AB, AC = (B[0]-A[0], B[1]-A[1]), (C[0]-A[0], C[1]-A[1])
+		AB_m, AC_m = (AB[0]**2 + AB[1]**2)**0.5, (AC[0]**2 + AC[1]**2)**0.5
+		temp = ((AB[0]*AC[0]) + (AB[1]*AC[1]))/(AB_m * AC_m)
+		angle_to_target = math.degrees(math.acos(temp))
+
+		# The angle can go both ways +ve or -ve.
+		distance_to_target = math.dist(self.pos, target)
+		left_dist = math.dist(self.get_position(self.dir-angle_to_target, distance_to_target), target)
+		self.left = self.get_position(self.dir-angle_to_target, distance_to_target)
+		right_dist = math.dist(self.get_position(self.dir+angle_to_target, distance_to_target), target)
+		self.right = self.get_position(self.dir+angle_to_target, distance_to_target)
+
+		if right_dist < left_dist:
+			self.dir += randint(0, self.max_angle)
+		else:
+			self.dir += randint(-self.max_angle, 0)
+
+	def get_position(self, base_angle, length):
+		angle = base_angle * (math.pi / 180)
+		x = self.pos[0] + (length * math.cos(angle))
+		y = self.pos[1] + (length * math.sin(angle))
+		return (x,y)
 
 	def reset(self, position, direction):
 		self.pos = position

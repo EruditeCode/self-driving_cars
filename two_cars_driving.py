@@ -4,7 +4,7 @@
 
 import pygame
 from collections import deque
-from test_track_barriers import barriers
+from race_track_barriers import barriers
 from improved_car import Car
 
 # Reorganise the boundary data as walls.
@@ -20,17 +20,17 @@ def main():
 	screen = pygame.display.set_mode((WIDTH, HEIGHT))
 	clock = pygame.time.Clock()
 
-	bg = pygame.image.load('test_track.png')
+	bg = pygame.image.load('race_track.png')
 	bg = pygame.transform.scale(bg, (900, 600))
 
 	# Loading car image and initialising the car object.
 	CAR_IMAGE = pygame.image.load('car.png')
 	CAR_IMAGE = pygame.transform.scale(CAR_IMAGE, (42, 20))
-	car1 = Car((WIDTH//2, HEIGHT//2), 0, 2, 6)
+	car1 = Car((350, 250), 115, 2, 6)
 	car1.update(walls)
 	CAR_2_IMAGE = pygame.image.load('car_2.png')
 	CAR_2_IMAGE = pygame.transform.scale(CAR_2_IMAGE, (42, 20))
-	car2 = Car((80, 80), 90, 2, 6)
+	car2 = Car((80, 150), 270, 2, 6)
 	car2.update(walls)
 
 	car_barriers, car_barriers_2 = [], []

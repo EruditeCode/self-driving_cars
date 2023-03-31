@@ -26,7 +26,7 @@ def main():
 	# Loading car image and initialising the car object.
 	CAR_IMAGE = pygame.image.load('car.png')
 	CAR_IMAGE = pygame.transform.scale(CAR_IMAGE, (42, 20))
-	car1 = Car((WIDTH//2, HEIGHT//2), 90, 3, 8)
+	car1 = Car((WIDTH//2, HEIGHT//2), 90, 2, 6)
 	car1.update(walls)
 
 	# Initialising empty trail list to create a trail for the car.

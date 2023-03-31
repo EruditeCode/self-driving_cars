@@ -47,8 +47,7 @@ def main():
 
 		if drive:
 			trail.appendleft(car1.pos)
-			mouse = pygame.mouse.get_pos()
-			car1.update(walls, mouse)
+			car1.update(walls)
 
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))

@@ -32,42 +32,39 @@ class Car:
 			ray.update(self.pos, self.dir, walls)
 
 	def update_guidance(self):
-		# If the ray is short...
-		# Perform evasive maneurveurs otherwise allow slow, random direction...
-		# Check if the decision counter allows a guidance update.
-		if self.decision_counter == 1:
-			self.decision_counter = 0
-			return
+		min_ray, max_ray = self.find_min_max_rays()
+		if self.rays[min_ray].distance < 80:
+			self.evasive_action(max_ray)
 		else:
-			self.decision_counter += 1
+			self.decision_counter_check()
+		
+	def find_min_max_rays(self):
+		max_distance, max_index = self.rays[0].distance, 0
+		min_distance, min_index = self.rays[0].distance, 0
+		for index, ray in enumerate(self.rays):
+			if ray.distance >= max_distance:
+				max_distance, max_index = ray.distance, index
+			if ray.distance <= min_distance:
+				min_distance, min_index = ray.distance, index
+		return min_index, max_index
 
-		# Find the longest ray.
-		max_ray = self.find_longest_ray()
-		if self.rays[max_ray] < 50:
-			# Evasive action!!!
-			pass
-		else:
-			# Decision check...
-			# More general direction update...
-			pass
-
-		# Bias the random direction change towards the longest ray.
+	def evasive_action(self, max_ray):
 		if max_ray == 0:
 			self.dir += randint(-self.max_angle, 0)
 		elif max_ray == 1:
 			if self.rays[0].distance > self.rays[2].distance:
-				self.dir += randint(-self.max_angle, 1)
+				self.dir += randint(-self.max_angle, 0)
 			else:
-				self.dir += randint(-1, self.max_angle)
+				self.dir += randint(0, self.max_angle)
 		else:
 			self.dir += randint(0, self.max_angle)
 
-	def find_longest_ray(self):
-		max_distance, max_index = 0, None
-		for index, ray in enumerate(self.rays):
-			if ray.distance >= max_distance:
-				max_distance, max_index = ray.distance, index
-		return max_index
+	def decision_counter_check(self):
+		if self.decision_counter >= 10:
+			self.dir += randint(-self.max_angle, self.max_angle)
+			self.decision_counter = 0
+		else:
+			self.decision_counter += 1
 
 	def reset(self, position, direction):
 		self.pos = position

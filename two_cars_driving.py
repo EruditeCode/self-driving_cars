@@ -33,6 +33,8 @@ def main():
 	car2 = Car((80, 80), 90, 2, 6)
 	car2.update(walls)
 
+	car_barriers, car_barriers_2 = [], []
+
 	drive = False
 	show_struct = False
 	while True:
@@ -47,8 +49,9 @@ def main():
 					show_struct = not show_struct
 
 		if drive:
-			car1.update(walls)
-			car2.update(walls, car1.pos)
+			car1.update(walls+car_barriers_2)
+			car2.update(walls+car_barriers, car1.pos)
+		car_barriers, car_barriers_2 = [], []
 
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))
@@ -67,11 +70,13 @@ def main():
 		car_rect = car_temp.get_rect()
 		car_rect.center = car1.pos
 		screen.blit(car_temp, car_rect)
+		car_barriers.extend([[car_rect.topleft, car_rect.topright], [car_rect.topright, car_rect.bottomright], [car_rect.bottomleft, car_rect.bottomright], [car_rect.topleft, car_rect.bottomleft]])
 
 		car_2_temp = pygame.transform.rotate(CAR_2_IMAGE, -car2.dir)
 		car_2_rect = car_2_temp.get_rect()
 		car_2_rect.center = car2.pos
 		screen.blit(car_2_temp, car_2_rect)
+		car_barriers_2.extend([[car_2_rect.topleft, car_2_rect.topright], [car_2_rect.topright, car_2_rect.bottomright], [car_2_rect.bottomleft, car_2_rect.bottomright], [car_2_rect.topleft, car_2_rect.bottomleft]])
 
 		pygame.display.update()
 		clock.tick(60)

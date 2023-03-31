@@ -77,9 +77,6 @@ def main():
 		car_rect.center = car1.pos
 		screen.blit(car_temp, car_rect)
 
-		pygame.draw.circle(screen, (0,0,255), car1.left, 5)
-		pygame.draw.circle(screen, (255,0,0), car1.right, 5)
-		
 		pygame.display.update()
 		clock.tick(60)
 

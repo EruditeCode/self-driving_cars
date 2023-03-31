@@ -10,8 +10,6 @@ class Car:
 		self.speed = speed
 		self.max_angle = max_angle
 		self.decision_counter = 0
-		self.left = (0,0)
-		self.right = (0,0)
 
 		self.rays = []
 		for angle in range(-60, 70, 60):
@@ -69,24 +67,23 @@ class Car:
 			self.decision_counter += 1
 
 	def turn_towards_target(self, target):
-		#self.get_angle_to_target
+		angle = self.get_angle_to_target(target)
+		# The angle can go both ways +ve or -ve.
+		target_distance = math.dist(self.pos, target)
+		left = math.dist(self.get_position(self.dir-angle, target_distance), target)
+		right = math.dist(self.get_position(self.dir+angle, target_distance), target)
+		if right < left:
+			self.dir += randint(0, self.max_angle)
+		else:
+			self.dir += randint(-self.max_angle, 0)
+
+	def get_angle_to_target(self, target):
 		A, B, C = self.pos, self.get_position(self.dir, self.speed), target
 		AB, AC = (B[0]-A[0], B[1]-A[1]), (C[0]-A[0], C[1]-A[1])
 		AB_m, AC_m = (AB[0]**2 + AB[1]**2)**0.5, (AC[0]**2 + AC[1]**2)**0.5
 		temp = ((AB[0]*AC[0]) + (AB[1]*AC[1]))/(AB_m * AC_m)
 		angle_to_target = math.degrees(math.acos(temp))
-
-		# The angle can go both ways +ve or -ve.
-		distance_to_target = math.dist(self.pos, target)
-		left_dist = math.dist(self.get_position(self.dir-angle_to_target, distance_to_target), target)
-		self.left = self.get_position(self.dir-angle_to_target, distance_to_target)
-		right_dist = math.dist(self.get_position(self.dir+angle_to_target, distance_to_target), target)
-		self.right = self.get_position(self.dir+angle_to_target, distance_to_target)
-
-		if right_dist < left_dist:
-			self.dir += randint(0, self.max_angle)
-		else:
-			self.dir += randint(-self.max_angle, 0)
+		return angle_to_target
 
 	def get_position(self, base_angle, length):
 		angle = base_angle * (math.pi / 180)
